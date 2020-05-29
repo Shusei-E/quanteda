@@ -58,6 +58,9 @@ struct recompile_mt : public Worker{
     void operator()(std::size_t begin, std::size_t end){
         for (std::size_t h = begin; h < end; h++) {
             for (std::size_t i = 0; i < texts[h].size(); i++) {
+                if (texts[h][i] >= ids_new.size()) {
+                    throw std::range_error("Invalid tokens object");
+                }
                 texts[h][i] = ids_new[texts[h][i]];
             }
         }
@@ -166,6 +169,9 @@ inline Tokens recompile(Texts texts,
 #else
     for (std::size_t h = 0; h < texts.size(); h++) {
         for (std::size_t i = 0; i < texts[h].size(); i++) {
+            if (texts[h][i] >= ids_new.size()) {
+                throw std::range_error("Invalid tokens object");
+            }
             texts[h][i] = ids_new[texts[h][i]];
             //Rcout << texts[h][i] << " -> " << ids_new[texts[h][i]] << "\n";
         }
