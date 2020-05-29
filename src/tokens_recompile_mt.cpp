@@ -25,6 +25,47 @@ List qatd_cpp_tokens_recompile(const List &texts_,
     
 }
 
+
+// [[Rcpp::export]]
+List qatd_cpp_tokens_remap(const List &texts_,
+                           const CharacterVector types_,
+                           const IntegerVector ids_){
+    
+    Texts texts = Rcpp::as<Texts>(texts_);
+    Types types = Rcpp::as<Types>(types_);
+    
+    if (types_.size() == ids_.size()) {
+        throw std::range_error("Invalid IDs");
+    }
+    
+    VecIds ids_new(types.size() + 1);
+    ids_new[0] = 0; // reserved for padding
+    for (std::size_t g = 0; g < ids_.size(); g++) {
+        ids_new[g + 1] = ids_[g];
+    }
+    
+#if QUANTEDA_USE_TBB
+    recompile_mt recompile_mt(texts, ids_new);
+    parallelFor(0, texts.size(), recompile_mt);
+#else
+    for (std::size_t h = 0; h < texts.size(); h++) {
+        for (std::size_t i = 0; i < texts[h].size(); i++) {
+            if (texts[h][i] >= ids_new.size()) {
+                throw std::range_error("Invalid tokens object");
+            }
+            texts[h][i] = ids_new[texts[h][i]];
+        }
+    }
+#endif
+    
+    Tokens texts_new_ = Rcpp::wrap(texts);
+    texts_new_.attr("types") = types_;
+    texts_new_.attr("padding") = texts_.attr("padding");
+    texts_new_.attr("class") = "tokens";
+    return texts_new_;
+}
+
+
 /***R
 
 #toks3 <- list(rep(0:5, 1), rep(10:15, 1))
