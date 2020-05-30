@@ -10,6 +10,7 @@ tokens_parallel <- function(x, block_size = 1000, ...) {
         stop("x must be a character")
         
     temp <- split(x, ceiling(seq_along(x) / block_size))
+    time <- proc.time()
     temp <- future_lapply(temp, function(y) {
         y <- preserve_special(y, split_hyphens = FALSE, split_tags = FALSE, verbose = FALSE)
         special <- attr(y, "special")
@@ -19,19 +20,21 @@ tokens_parallel <- function(x, block_size = 1000, ...) {
         y <- unclass(y)
         return(y)
     })
+    cat("tokenizing... ", format((proc.time() - time)[3], digits = 3), "sec\n")
     type <- unique(unlist(lapply(temp, attr, "types"), use.names = FALSE))
     result <- lapply(temp, function(y) {
         map <- c(0L, fastmatch::fmatch(attr(y, "types"), type))
         y <- lapply(y, function(z) map[z + 1L])
         return(y)
     })
-    
+    cat("remapping... ", format((proc.time() - time)[3], digits = 3), "sec\n")
     result <- build_tokens(
         unlist(result, recursive = FALSE), 
         types = type,
         what = "word", 
         docvars = make_docvars(length(x))
     )
+    cat("building... ", format((proc.time() - time)[3], digits = 3), "sec\n")
     result <- tokens.tokens(result, ...)
     return(result)
 }
