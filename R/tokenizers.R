@@ -101,27 +101,27 @@ restore_special <- function(x, special) {
     if (!length(special))
         return(x)
     
-    types <- types(x)
+    type <- attr(x, "types")
     # extract all placeholders
-    d <- stri_extract_all_regex(types, "\u100000\\d+\u100001", omit_no_match = TRUE)
+    d <- stri_extract_all_regex(type, "\u100000\\d+\u100001", omit_no_match = TRUE)
     r <- lengths(d)
     d <- unlist(d, use.names = FALSE)
     
     # index placeholders
-    index <- split(rep(seq_along(types), r), factor(d, levels = unique(d)))
+    index <- split(rep(seq_along(type), r), factor(d, levels = unique(d)))
     if (length(index)) {
         pos <- fastmatch::fmatch(names(index), special)
         for (i in seq_along(index)) {
-            types[index[[i]]] <- stri_replace_all_fixed(
-                types[index[[i]]], 
+            type[index[[i]]] <- stri_replace_all_fixed(
+                type[index[[i]]], 
                 special[pos[i]], 
                 names(special)[pos[i]],
                 vectorize_all = FALSE
             )
         }
     }
-    if (!identical(types, types(x))) {
-        types(x) <- types
+    if (!identical(type, attr(x, "types"))) {
+        attr(x, "types") <- type
         x <- tokens_recompile(x)
     }
     return(x)
