@@ -79,7 +79,8 @@ Suggests:
     xtable,
     knitr,
     igraph,
-    wordcloud
+    wordcloud,
+    future.apply
 URL: https://quanteda.io
 Encoding: UTF-8
 BugReports: https://github.com/quanteda/quanteda/issues
@@ -169,6 +170,7 @@ Collate:
     'tokens_group.R'
     'tokens_lookup.R'
     'tokens_ngrams.R'
+    'tokens_parallel.R'
     'tokens_replace.R'
     'tokens_sample.R'
     'tokens_segment.R'
