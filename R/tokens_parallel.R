@@ -9,7 +9,7 @@ tokens_parallel <- function(x, block_size = 1000, FUN = lapply, ...) {
     
     if (!is.character(x))
         stop("x must be a character")
-        
+    cat(deparse(substitute(FUN)), "\n")    
     temp <- split(x, ceiling(seq_along(x) / block_size))
     time <- proc.time()
     temp <- FUN(temp, function(y) {
