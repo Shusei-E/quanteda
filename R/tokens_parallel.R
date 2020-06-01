@@ -1,17 +1,18 @@
 #' Experimental function for parallel tokenization
 #' @param x a character vector
 #' @param block_size number of documents in a block (only for development)
+#' @param lapply family function for itteration
 #' @param ... passed to tokens.tokens()
 #' @export
 #' @importFrom future.apply future_lapply
-tokens_parallel <- function(x, block_size = 1000, ...) {
+tokens_parallel <- function(x, block_size = 1000, FUN = lapply, ...) {
     
     if (!is.character(x))
         stop("x must be a character")
         
     temp <- split(x, ceiling(seq_along(x) / block_size))
     time <- proc.time()
-    temp <- future_lapply(temp, function(y) {
+    temp <- FUN(temp, function(y) {
         y <- preserve_special(y, split_hyphens = FALSE, split_tags = FALSE, verbose = FALSE)
         special <- attr(y, "special")
         y <- tokenize_word(y)
