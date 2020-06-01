@@ -16,7 +16,7 @@ tokens_parallel <- function(x, block_size = 1000, ...) {
         special <- attr(y, "special")
         y <- tokenize_word(y)
         y <- serialize_tokens(y)
-        y <- restore_special(y, special)
+        y <- restore_special(y, special, recompile = FALSE)
         y <- unclass(y)
         return(y)
     })

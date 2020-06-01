@@ -96,7 +96,7 @@ preserve_special <- function(x, split_hyphens = TRUE, split_tags = TRUE, verbose
     structure(x, names = name, special = special)
 }
 
-restore_special <- function(x, special) {
+restore_special <- function(x, special, recompile = TRUE) {
 
     if (!length(special))
         return(x)
@@ -120,7 +120,7 @@ restore_special <- function(x, special) {
             )
         }
     }
-    if (!identical(type, attr(x, "types"))) {
+    if (!identical(type, attr(x, "types")) && recompile) {
         attr(x, "types") <- type
         x <- tokens_recompile(x)
     }
