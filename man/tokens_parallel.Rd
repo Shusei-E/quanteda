@@ -4,7 +4,7 @@
 \alias{tokens_parallel}
 \title{Experimental function for parallel tokenization}
 \usage{
-tokens_parallel(x, block_size = 1000, ...)
+tokens_parallel(x, docnames = NULL, block_size = 10000, FUN = lapply, ...)
 }
 \arguments{
 \item{x}{a character vector}
@@ -12,6 +12,8 @@ tokens_parallel(x, block_size = 1000, ...)
 \item{block_size}{number of documents in a block (only for development)}
 
 \item{...}{passed to tokens.tokens()}
+
+\item{lapply}{family function for itteration}
 }
 \description{
 Experimental function for parallel tokenization

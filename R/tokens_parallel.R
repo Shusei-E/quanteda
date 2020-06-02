@@ -5,7 +5,7 @@
 #' @param ... passed to tokens.tokens()
 #' @export
 #' @importFrom future.apply future_lapply
-tokens_parallel <- function(x, block_size = 10000, FUN = lapply, ...) {
+tokens_parallel <- function(x, docnames = NULL, block_size = 10000, FUN = lapply, ...) {
     
     if (!is.character(x))
         stop("x must be a character")
@@ -33,7 +33,7 @@ tokens_parallel <- function(x, block_size = 10000, FUN = lapply, ...) {
         unlist(result, recursive = FALSE), 
         types = type,
         what = "word", 
-        docvars = make_docvars(length(x), names(x))
+        docvars = make_docvars(length(x), docnames)
     )
     cat("building... ", format((proc.time() - time)[3], digits = 3), "sec\n")
     result <- tokens.tokens(result, ...)
