@@ -32,7 +32,7 @@ tokens_parallel <- function(x, block_size = 1000, ...) {
         unlist(result, recursive = FALSE), 
         types = type,
         what = "word", 
-        docvars = make_docvars(length(x))
+        docvars = make_docvars(length(x), names(x))
     )
     cat("building... ", format((proc.time() - time)[3], digits = 3), "sec\n")
     result <- tokens.tokens(result, ...)
