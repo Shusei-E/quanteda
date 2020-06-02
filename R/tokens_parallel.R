@@ -5,7 +5,7 @@
 #' @param ... passed to tokens.tokens()
 #' @export
 #' @importFrom future.apply future_lapply
-tokens_parallel <- function(x, block_size = 1000, FUN = lapply, ...) {
+tokens_parallel <- function(x, block_size = 10000, FUN = lapply, ...) {
     
     if (!is.character(x))
         stop("x must be a character")
