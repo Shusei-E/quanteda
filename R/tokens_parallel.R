@@ -10,8 +10,8 @@ tokens_parallel <- function(x, docnames = NULL, block_size = 10000, FUN = lapply
     if (!is.character(x))
         stop("x must be a character")
     cat(deparse(substitute(FUN)), "\n")
-    if (!is.null(docnames))
-        names(x) <- docnames
+    if (is.null(docnames))
+        docnames <- names(x)
     x <- split(x, ceiling(seq_along(x) / block_size))
     time <- proc.time()
     cat("tokenizing...\n")
@@ -37,7 +37,7 @@ tokens_parallel <- function(x, docnames = NULL, block_size = 10000, FUN = lapply
         unlist(result, recursive = FALSE), 
         types = type,
         what = "word", 
-        docvars = make_docvars(length(x), docnames)
+        docvars = make_docvars(length(docnames), docnames)
     )
     cat("building... ", format((proc.time() - time)[3], digits = 3), "sec\n")
     result <- tokens.tokens(result, ...)
