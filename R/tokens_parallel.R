@@ -5,18 +5,22 @@
 #' @param ... passed to tokens.tokens()
 #' @export
 #' @importFrom future.apply future_lapply
-tokens_parallel <- function(x, docnames = NULL, block_size = 10000, FUN = lapply, ...) {
+tokens_parallel <- function(x, block_size = 10000, FUN = lapply, 
+                            include_docvars = TRUE, ...) {
     
-    if (!is.character(x))
-        stop("x must be a character")
-    cat(deparse(substitute(FUN)), "\n")
-    if (is.null(docnames))
-        docnames <- names(x)
+    
+    if (!is.corpus(x))
+        stop("x must be a coprus object")
+    
+    x <- as.corpus(x)
+    attrs <- attributes(x)
+    
     x <- split(x, ceiling(seq_along(x) / block_size))
     time <- proc.time()
     cat("tokenizing...\n")
     x <- FUN(x, function(y) {
         cat("   ", head(names(y), 1), "to", tail(names(y), 1), "\n")
+        y <- normalize_characters(y)
         y <- preserve_special(y, split_hyphens = FALSE, split_tags = FALSE, verbose = FALSE)
         special <- attr(y, "special")
         y <- tokenize_word(y, verbose = FALSE)
@@ -37,7 +41,7 @@ tokens_parallel <- function(x, docnames = NULL, block_size = 10000, FUN = lapply
         unlist(result, recursive = FALSE), 
         types = type,
         what = "word", 
-        docvars = make_docvars(length(docnames), docnames)
+        docvars = select_docvars(attrs[["docvars"]], user = include_docvars, system = TRUE)
     )
     cat("building... ", format((proc.time() - time)[3], digits = 3), "sec\n")
     result <- tokens.tokens(result, ...)
