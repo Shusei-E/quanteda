@@ -12,7 +12,9 @@ tokens_parallel <- function(x, docnames = NULL, block_size = 10000, FUN = lapply
     cat(deparse(substitute(FUN)), "\n")    
     temp <- split(x, ceiling(seq_along(x) / block_size))
     time <- proc.time()
+    cat("tokenizing...\n")
     temp <- FUN(temp, function(y) {
+        cat("   ", head(names(y), 1), "to", tail(names(y), 1), "\n")
         y <- preserve_special(y, split_hyphens = FALSE, split_tags = FALSE, verbose = FALSE)
         special <- attr(y, "special")
         y <- tokenize_word(y)
