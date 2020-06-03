@@ -9,7 +9,9 @@ tokens_parallel <- function(x, docnames = NULL, block_size = 10000, FUN = lapply
     
     if (!is.character(x))
         stop("x must be a character")
-    cat(deparse(substitute(FUN)), "\n")    
+    cat(deparse(substitute(FUN)), "\n")
+    if (!is.snull(docnames))
+        names(x) <- docnames
     x <- split(x, ceiling(seq_along(x) / block_size))
     time <- proc.time()
     cat("tokenizing...\n")
@@ -17,7 +19,7 @@ tokens_parallel <- function(x, docnames = NULL, block_size = 10000, FUN = lapply
         cat("   ", head(names(y), 1), "to", tail(names(y), 1), "\n")
         y <- preserve_special(y, split_hyphens = FALSE, split_tags = FALSE, verbose = FALSE)
         special <- attr(y, "special")
-        y <- tokenize_word(y)
+        y <- tokenize_word(y, verbose = FALSE)
         y <- serialize_tokens(y)
         y <- restore_special(y, special, recompile = FALSE)
         y <- unclass(y)
