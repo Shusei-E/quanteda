@@ -10,10 +10,10 @@ tokens_parallel <- function(x, docnames = NULL, block_size = 10000, FUN = lapply
     if (!is.character(x))
         stop("x must be a character")
     cat(deparse(substitute(FUN)), "\n")    
-    temp <- split(x, ceiling(seq_along(x) / block_size))
+    x <- split(x, ceiling(seq_along(x) / block_size))
     time <- proc.time()
     cat("tokenizing...\n")
-    temp <- FUN(temp, function(y) {
+    x <- FUN(x, function(y) {
         cat("   ", head(names(y), 1), "to", tail(names(y), 1), "\n")
         y <- preserve_special(y, split_hyphens = FALSE, split_tags = FALSE, verbose = FALSE)
         special <- attr(y, "special")
@@ -24,8 +24,8 @@ tokens_parallel <- function(x, docnames = NULL, block_size = 10000, FUN = lapply
         return(y)
     })
     cat("tokenizing... ", format((proc.time() - time)[3], digits = 3), "sec\n")
-    type <- unique(unlist(lapply(temp, attr, "types"), use.names = FALSE))
-    result <- lapply(temp, function(y) {
+    type <- unique(unlist(lapply(x, attr, "types"), use.names = FALSE))
+    result <- lapply(x, function(y) {
         map <- c(0L, fastmatch::fmatch(attr(y, "types"), type))
         y <- lapply(y, function(z) map[z + 1L])
         return(y)
