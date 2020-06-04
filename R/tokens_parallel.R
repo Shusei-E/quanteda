@@ -49,7 +49,7 @@ tokens_parallel <- function(x, block_size = 10000, FUN = lapply,
         docvars = select_docvars(attrs[["docvars"]], user = include_docvars, system = TRUE)
     )
     cat("building... ", format((proc.time() - time)[3], digits = 3), "sec\n")
-    result <- tokens.tokens(result, ..., verbose = FALSE)
+    #result <- tokens.tokens(result, ..., verbose = FALSE)
     return(result)
 }
 
