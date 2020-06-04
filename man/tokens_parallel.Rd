@@ -4,7 +4,13 @@
 \alias{tokens_parallel}
 \title{Experimental function for parallel tokenization}
 \usage{
-tokens_parallel(x, docnames = NULL, block_size = 10000, FUN = lapply, ...)
+tokens_parallel(
+  x,
+  block_size = 10000,
+  FUN = lapply,
+  include_docvars = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{a character vector}

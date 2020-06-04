@@ -19,7 +19,7 @@ tokens_parallel <- function(x, block_size = 10000, FUN = lapply,
     time <- proc.time()
     cat("tokenizing...\n")
     x <- FUN(x, function(y) {
-        cat("   ", head(names(y), 1), "to", tail(names(y), 1), "\n")
+        cat("   ", head(names(y), 1), "to", tail(names(y), 1), "by PID", Sys.getpid(), "\n")
         y <- normalize_characters(y)
         y <- preserve_special(y, split_hyphens = FALSE, split_tags = FALSE, verbose = FALSE)
         special <- attr(y, "special")
