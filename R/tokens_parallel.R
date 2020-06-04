@@ -6,6 +6,11 @@
 #' @export
 #' @importFrom future.apply future_lapply
 tokens_parallel <- function(x, block_size = 10000, FUN = lapply, 
+                            remove_punct = FALSE,
+                            remove_symbols = FALSE,
+                            remove_numbers = FALSE,
+                            remove_url = FALSE,
+                            remove_separators = TRUE,
                             include_docvars = TRUE, ...) {
     
     
@@ -49,7 +54,13 @@ tokens_parallel <- function(x, block_size = 10000, FUN = lapply,
         docvars = select_docvars(attrs[["docvars"]], user = include_docvars, system = TRUE)
     )
     cat("building... ", format((proc.time() - time)[3], digits = 3), "sec\n")
-    #result <- tokens.tokens(result, ..., verbose = FALSE)
+    result <- tokens.tokens(result, 
+                            remove_punct = remove_punct,
+                            remove_symbols = remove_symbols,
+                            remove_numbers = remove_numbers,
+                            remove_url = remove_url,
+                            remove_separators = remove_separators,
+                            ..., verbose = FALSE)
     return(result)
 }
 
